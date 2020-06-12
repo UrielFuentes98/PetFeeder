@@ -1,0 +1,6 @@
+build/
+debug/
+dist/
+nbproject/private/
+nbproject/Makefile*
+nbproject/Package*
