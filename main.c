@@ -1,8 +1,9 @@
 /*
  * File:   main.c
  * Author: uriel
- *
- * Created on June 12, 2020, 6:07 PM
+ *This is the program to activate a Servo Motor in a certain period of time 
+ *for a pet peeder device.
+ * Created on June 12, 2020
  */
 
 
@@ -19,20 +20,26 @@
 
 #include <xc.h>
 
-#define MINIMUM 31 // 5% - 31, 10% - 60
-#define MAXIMUM 60
-volatile int dummy = 0;
+#define DUTY_5 31 // 5% - 31 
+#define DUTY_10 60 //10% - 60
+#define Freq50 142 //with formula should 154, but after calibration 142
 
-void main(void) {
+void PWMInit () {
     TRISIO2 = 1; //Desabling CCP module output. 
-    OSCCONbits.IRCF = 0; //Setting 31 kHz clock frequency
-    PR2 = 142; //with formula should 154, but after calibration 140
+    PR2 = Freq50; 
     CCP1CONbits.CCP1M = 0b1100; //Selecting PWM mode.
-    CCP1CONbits.DC1B = MINIMUM & 3; //lower two bits.
-    CCPR1L = MINIMUM >> 2;  //Upper bits. 
+    CCP1CONbits.DC1B = DUTY_5 & 3; //lower two bits.
+    CCPR1L = DUTY_5 >> 2;  //Upper bits. 
     PIR1 &= 0xFD; //clearing timer 2 flag
     T2CON = 0b100; //enabling timer 2 with 0 post and prescaler. 
     while (!(PIR1 & 0x2)); //wait for timer flag to set before activating PWM.
     TRISIO2 = 0; //Enabling CCP output. 
+}
+
+void main(void) {
+    
+    OSCCONbits.IRCF = 0; //Setting 31 kHz clock frequency
+    PWMInit();
     while(1);
+    
 }
