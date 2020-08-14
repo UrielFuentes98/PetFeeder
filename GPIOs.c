@@ -4,11 +4,14 @@
 
 void initGPIOs (void) {
     OPTION_REGbits.nGPPU = 0;
+    CMCON0bits.CM = 0x7;
     initGP3();
     initLEDs();
 }
 
 void initLEDs (void){
+    ANSELbits.ANS1 = 0;
+    ANSELbits.ANS3 = 0;
     TRISIO1 = 0; //GP1 as output
     TRISIO4 = 0; //GP4 as output
     TRISIO5 = 0; //GP5 as output
