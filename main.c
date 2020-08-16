@@ -28,7 +28,7 @@
 
 volatile bool progFinish = false; 
 enum states {TIMER, PROGRAMMING, FEEDING};
-frequencies FREQUENCY = ONCE_D;
+frequencies frequecy = ONCE_D;
 enum states STATE = TIMER;
 
 void FeedPet (void);
@@ -74,24 +74,21 @@ switch (STATE){
     case PROGRAMMING:
         //Check if programming timeout ocurred
         if (progFinish){
-            //Turn leads off, reset timer 1 to start 
-            //count and update feeding frequency
-            turnOffLEDs();
-            ResetTime();
-            updateWaitTime (FREQUENCY);
-            STATE = TIMER;
+            STATE = FEEDING;
         }else{
             //Read ADC value to update feeding frequency
-            FREQUENCY = getFreq();
+            frequecy = getFreq();
         }
         break;
         
     case FEEDING:
+        //Turn leads off, reset timer 1 to start 
+        //count and update feeding frequency
         T1CONbits.TMR1ON = 0; //Disables timer 1
         turnOffLEDs();
         FeedPet();
         ResetTime();
-        updateWaitTime (FREQUENCY);
+        updateWaitTime (frequecy);
         STATE = TIMER;
         break;  
         

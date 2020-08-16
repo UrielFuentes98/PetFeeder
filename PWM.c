@@ -5,12 +5,11 @@
 
 //Change PWM duty cycle
 void setPWM_DC (uint8_t DutyCycle){
+    TRISIO2 = 1; //Disabling CCP output.
     CCP1CONbits.DC1B = DutyCycle & 3; //lower two bits.
     CCPR1L = DutyCycle >> 2;  //Upper bits.   
     PIR1 &= 0xFD; //clearing timer 2 flag
     while (!(PIR1 & 0x2)); //wait for timer flag to set before activating PWM.
-    DebounceIO ();
-    DebounceIO ();
     TRISIO2 = 0; //Enabling CCP output. 
 }
 
